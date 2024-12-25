@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 interface Video {
   url: string;
@@ -7,7 +7,7 @@ interface Video {
 const VideoGrid = () => {
   // Example videos - replace with your actual video URLs
   const videos: Video[] = [
-    { url: "https://example.com/video1.mp4" },
+    { url: "https://example.com/video1.mp4" }, // Hero video
     { url: "https://example.com/video2.mp4" },
     { url: "https://example.com/video3.mp4" },
     { url: "https://example.com/video4.mp4" },
@@ -27,7 +27,10 @@ const VideoGrid = () => {
   return (
     <div className="video-grid">
       {videos.map((video, index) => (
-        <div key={index} className="video-container">
+        <div 
+          key={index} 
+          className={`video-container ${index === 0 ? 'hero' : 'grid-item'}`}
+        >
           <video
             muted
             loop

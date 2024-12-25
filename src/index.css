@@ -10,7 +10,7 @@
 
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 640px), 1fr));
+  grid-template-columns: 1fr;
   gap: 1px;
   background-color: #000000;
   padding: 1px;
@@ -30,6 +30,14 @@
   padding-top: 56.25%; /* 16:9 Aspect Ratio */
 }
 
+.video-container.hero::before {
+  padding-top: 56.25%; /* 16:9 for desktop */
+}
+
+.video-container.grid-item::before {
+  padding-top: 56.25%; /* 16:9 for all grid items */
+}
+
 .video-container video {
   position: absolute;
   top: 0;
@@ -37,4 +45,26 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .video-grid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns for desktop */
+  }
+
+  .video-container.hero {
+    grid-column: 1 / -1; /* Span full width */
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .video-grid {
+    grid-template-columns: 1fr; /* Single column for mobile */
+  }
+
+  .video-container.hero::before {
+    padding-top: 177.78%; /* 9:16 aspect ratio for mobile hero */
+  }
 }
