@@ -1,10 +1,10 @@
-import VideoGrid from '../components/VideoGrid';
+import VideoGrid from "@/components/VideoGrid";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-[#a47864] p-8">
+    <main className="min-h-screen bg-black">
       <VideoGrid />
-    </div>
+    </main>
   );
 };
 
