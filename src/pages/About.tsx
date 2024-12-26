@@ -2,7 +2,7 @@ import { Mail, User, Users, Link } from "lucide-react";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden flex flex-col p-8 md:p-16">
+    <div className="min-h-screen bg-[#493B2A] text-white overflow-hidden flex flex-col p-8 md:p-16">
       <div className="max-w-3xl mx-auto space-y-12">
         {/* About Me Section */}
         <section className="space-y-4">
@@ -10,7 +10,7 @@ const About = () => {
             <User className="w-6 h-6" />
             <h2 className="text-2xl font-bold">About Me</h2>
           </div>
-          <p className="text-gray-300">
+          <p className="text-gray-200">
             I am a creative professional specializing in video production and visual storytelling. My work focuses on creating compelling narratives through dynamic visual content.
           </p>
         </section>
@@ -44,8 +44,8 @@ const About = () => {
             <h2 className="text-2xl font-bold">Contact</h2>
           </div>
           <div className="space-y-2">
-            <p className="text-gray-300">Email: contact@example.com</p>
-            <p className="text-gray-300">Location: New York, NY</p>
+            <p className="text-gray-200">Email: contact@example.com</p>
+            <p className="text-gray-200">Location: New York, NY</p>
           </div>
         </section>
       </div>
