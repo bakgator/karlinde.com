@@ -6,7 +6,7 @@ const Navigation = () => {
   const isAboutPage = location.pathname === "/about";
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex items-center gap-8">
+    <div className="fixed top-4 left-4 z-50 flex items-center gap-8">
       {/* Logo container */}
       <div className="w-12 h-12 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center">
         <img
@@ -20,7 +20,7 @@ const Navigation = () => {
       {isAboutPage ? (
         <Link 
           to="/" 
-          className="text-white hover:text-gray-300 transition-colors text-lg"
+          className="text-black hover:text-gray-700 transition-colors text-lg"
         >
           Portfolio
         </Link>
