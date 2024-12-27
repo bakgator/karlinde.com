@@ -2,26 +2,30 @@ import React from 'react';
 
 interface Video {
   url: string;
+  type: 'vimeo' | 'youtube';
+  id: string;
 }
 
 const VideoGrid = () => {
-  // Example videos - replace with your actual video URLs
   const videos: Video[] = [
-    { url: "https://example.com/video1.mp4" }, // Hero video
-    { url: "https://example.com/video2.mp4" },
-    { url: "https://example.com/video3.mp4" },
-    { url: "https://example.com/video4.mp4" },
-    { url: "https://example.com/video5.mp4" },
-    { url: "https://example.com/video6.mp4" },
+    { 
+      url: "https://player.vimeo.com/video/1042513117?h=1606554dc9",
+      type: "vimeo",
+      id: "1042513117"
+    },
+    { 
+      url: "https://www.youtube.com/watch?v=40oYTmYPbTY",
+      type: "youtube",
+      id: "40oYTmYPbTY"
+    }
   ];
 
-  const handleMouseEnter = (video: HTMLVideoElement) => {
-    video.play();
-  };
-
-  const handleMouseLeave = (video: HTMLVideoElement) => {
-    video.pause();
-    video.currentTime = 0;
+  const getEmbedUrl = (video: Video) => {
+    if (video.type === 'vimeo') {
+      return `https://player.vimeo.com/video/${video.id}`;
+    } else {
+      return `https://www.youtube.com/embed/${video.id}`;
+    }
   };
 
   return (
@@ -31,16 +35,13 @@ const VideoGrid = () => {
           key={index} 
           className={`video-container ${index === 0 ? 'hero' : 'grid-item'}`}
         >
-          <video
-            muted
-            loop
-            playsInline
-            onMouseEnter={(e) => handleMouseEnter(e.currentTarget)}
-            onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
-            poster="/placeholder.svg"
-          >
-            <source src={video.url} type="video/mp4" />
-          </video>
+          <iframe
+            src={getEmbedUrl(video)}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute top-0 left-0 w-full h-full"
+            title={`Video ${index + 1}`}
+          />
         </div>
       ))}
     </div>
