@@ -4,6 +4,9 @@ interface Video {
   url: string;
   type: 'vimeo' | 'youtube';
   id: string;
+  title: string;
+  subtitle: string;
+  thumbnail: string;
 }
 
 const VideoGrid = () => {
@@ -13,12 +16,18 @@ const VideoGrid = () => {
     { 
       url: "https://player.vimeo.com/video/1042513117?h=1606554dc9",
       type: "vimeo",
-      id: "1042513117"
+      id: "1042513117",
+      title: "Vimeo Video",
+      subtitle: "A beautiful vimeo creation",
+      thumbnail: "https://i.vimeocdn.com/video/1042513117_640x360.jpg"
     },
     { 
       url: "https://www.youtube.com/watch?v=40oYTmYPbTY",
       type: "youtube",
-      id: "40oYTmYPbTY"
+      id: "40oYTmYPbTY",
+      title: "YouTube Video",
+      subtitle: "An amazing youtube creation",
+      thumbnail: `https://img.youtube.com/vi/40oYTmYPbTY/maxresdefault.jpg`
     }
   ];
 
@@ -46,12 +55,25 @@ const VideoGrid = () => {
               title={`Video ${index + 1}`}
             />
           ) : (
-            <button 
-              onClick={() => setPlayingVideo(video.id)}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 transition-colors"
-            >
-              Play Video
-            </button>
+            <div className="video-thumbnail-container">
+              <img 
+                src={video.thumbnail} 
+                alt={video.title}
+                className="absolute top-0 left-0 w-full h-full object-cover"
+              />
+              <div className="video-overlay">
+                <div className="video-text">
+                  <h2 className="video-title">{video.title}</h2>
+                  <p className="video-subtitle">{video.subtitle}</p>
+                </div>
+                <button 
+                  onClick={() => setPlayingVideo(video.id)}
+                  className="play-button"
+                >
+                  PLAY VIDEO
+                </button>
+              </div>
+            </div>
           )}
         </div>
       ))}
