@@ -68,7 +68,7 @@ const VideoGrid = () => {
       const client = new Vimeo(
         '9f63ea25ec3b291f01ea61d38d18f8ff71c02075',
         'okStOTaTXTMwBq4q5yquBZ7nuRY1VewzkArXR0S0O/gPdLNQaGtbyGKDUYQd9W5PBSh+iWKKFuIRmzPIFFKafaZLWFpJMZ6EGk+N8ldhJc+ta2BNtQ8KFOM9qYRQGl6W',
-        'YOUR_ACCESS_TOKEN'
+        'c2bddadd9678cf92f7c064929ea22042'
       );
 
       const vimeoVideos = videos.filter(video => video.type === 'vimeo');
