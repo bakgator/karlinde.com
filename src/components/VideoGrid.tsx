@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Vimeo } from '@vimeo/vimeo';
 
 interface Video {
   url: string;
@@ -11,15 +12,14 @@ interface Video {
 
 const VideoGrid = () => {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
-
-  const videos: Video[] = [
+  const [videos, setVideos] = useState<Video[]>([
     { 
       url: "https://player.vimeo.com/video/1042513117?h=1606554dc9",
       type: "vimeo",
       id: "1042513117",
       title: "VIMEO VIDEO",
       subtitle: "A beautiful vimeo creation",
-      thumbnail: "https://i.vimeocdn.com/video/1042513117_640x360.jpg"
+      thumbnail: "" // Will be set dynamically
     },
     { 
       url: "https://www.youtube.com/watch?v=40oYTmYPbTY",
@@ -35,7 +35,7 @@ const VideoGrid = () => {
       id: "385563380",
       title: "NATURE BEAUTY",
       subtitle: "Exploring the wonders of nature",
-      thumbnail: "https://i.vimeocdn.com/video/385563380_640x360.jpg"
+      thumbnail: "" // Will be set dynamically
     },
     {
       url: "https://www.youtube.com/watch?v=oc7EaU6v46k",
@@ -53,7 +53,56 @@ const VideoGrid = () => {
       subtitle: "Capturing life's best scenes",
       thumbnail: `https://img.youtube.com/vi/qHuVnpOK91k/maxresdefault.jpg`
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchVimeoThumbnails = async () => {
+      const client = new Vimeo(
+        'YOUR_CLIENT_ID',
+        'YOUR_CLIENT_SECRET',
+        'YOUR_ACCESS_TOKEN'
+      );
+
+      const vimeoVideos = videos.filter(video => video.type === 'vimeo');
+      
+      const updatedVideos = [...videos];
+      
+      for (const video of vimeoVideos) {
+        try {
+          const response = await new Promise((resolve, reject) => {
+            client.request({
+              method: 'GET',
+              path: `/videos/${video.id}`,
+              query: {
+                fields: 'pictures'
+              }
+            }, (error, body) => {
+              if (error) {
+                reject(error);
+                return;
+              }
+              resolve(body);
+            });
+          });
+
+          const thumbnailUrl = response.pictures.sizes[2].link; // Medium size thumbnail
+          const videoIndex = updatedVideos.findIndex(v => v.id === video.id);
+          if (videoIndex !== -1) {
+            updatedVideos[videoIndex] = {
+              ...updatedVideos[videoIndex],
+              thumbnail: thumbnailUrl
+            };
+          }
+        } catch (error) {
+          console.error(`Error fetching thumbnail for video ${video.id}:`, error);
+        }
+      }
+
+      setVideos(updatedVideos);
+    };
+
+    fetchVimeoThumbnails();
+  }, []);
 
   const getEmbedUrl = (video: Video) => {
     if (video.type === 'vimeo') {
@@ -81,7 +130,7 @@ const VideoGrid = () => {
           ) : (
             <div className="video-thumbnail-container">
               <img 
-                src={video.thumbnail} 
+                src={video.thumbnail || '/placeholder.svg'} 
                 alt={video.title}
                 className="absolute top-0 left-0 w-full h-full object-cover"
               />
