@@ -65,6 +65,11 @@ const VideoGrid = () => {
   ]);
 
   useEffect(() => {
+    // Auto-play the first video
+    setPlayingVideo(videos[0].id);
+  }, []);
+
+  useEffect(() => {
     const fetchVimeoThumbnails = async () => {
       const client = new Vimeo(
         '9f63ea25ec3b291f01ea61d38d18f8ff71c02075',
@@ -119,11 +124,11 @@ const VideoGrid = () => {
     fetchVimeoThumbnails();
   }, []);
 
-  const getEmbedUrl = (video: Video) => {
+  const getEmbedUrl = (video: Video, isFirst: boolean = false) => {
     if (video.type === 'vimeo') {
-      return `https://player.vimeo.com/video/${video.id}`;
+      return `https://player.vimeo.com/video/${video.id}${isFirst ? '?autoplay=1&muted=1' : ''}`;
     } else {
-      return `https://www.youtube.com/embed/${video.id}`;
+      return `https://www.youtube.com/embed/${video.id}${isFirst ? '?autoplay=1&mute=1' : ''}`;
     }
   };
 
@@ -136,7 +141,7 @@ const VideoGrid = () => {
         >
           {playingVideo === video.id ? (
             <iframe
-              src={getEmbedUrl(video)}
+              src={getEmbedUrl(video, index === 0)}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               className="absolute top-0 left-0 w-full h-full"
