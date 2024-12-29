@@ -10,6 +10,14 @@ interface Video {
   thumbnail: string;
 }
 
+interface VimeoResponse {
+  pictures: {
+    sizes: Array<{
+      link: string;
+    }>;
+  };
+}
+
 const VideoGrid = () => {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [videos, setVideos] = useState<Video[]>([
@@ -58,18 +66,17 @@ const VideoGrid = () => {
   useEffect(() => {
     const fetchVimeoThumbnails = async () => {
       const client = new Vimeo(
-        'YOUR_CLIENT_ID',
-        'YOUR_CLIENT_SECRET',
+        '9f63ea25ec3b291f01ea61d38d18f8ff71c02075',
+        'okStOTaTXTMwBq4q5yquBZ7nuRY1VewzkArXR0S0O/gPdLNQaGtbyGKDUYQd9W5PBSh+iWKKFuIRmzPIFFKafaZLWFpJMZ6EGk+N8ldhJc+ta2BNtQ8KFOM9qYRQGl6W',
         'YOUR_ACCESS_TOKEN'
       );
 
       const vimeoVideos = videos.filter(video => video.type === 'vimeo');
-      
       const updatedVideos = [...videos];
       
       for (const video of vimeoVideos) {
         try {
-          const response = await new Promise((resolve, reject) => {
+          const response = await new Promise<VimeoResponse>((resolve, reject) => {
             client.request({
               method: 'GET',
               path: `/videos/${video.id}`,
@@ -81,17 +88,19 @@ const VideoGrid = () => {
                 reject(error);
                 return;
               }
-              resolve(body);
+              resolve(body as VimeoResponse);
             });
           });
 
-          const thumbnailUrl = response.pictures.sizes[2].link; // Medium size thumbnail
-          const videoIndex = updatedVideos.findIndex(v => v.id === video.id);
-          if (videoIndex !== -1) {
-            updatedVideos[videoIndex] = {
-              ...updatedVideos[videoIndex],
-              thumbnail: thumbnailUrl
-            };
+          if (response.pictures && response.pictures.sizes) {
+            const thumbnailUrl = response.pictures.sizes[2].link; // Medium size thumbnail
+            const videoIndex = updatedVideos.findIndex(v => v.id === video.id);
+            if (videoIndex !== -1) {
+              updatedVideos[videoIndex] = {
+                ...updatedVideos[videoIndex],
+                thumbnail: thumbnailUrl
+              };
+            }
           }
         } catch (error) {
           console.error(`Error fetching thumbnail for video ${video.id}:`, error);
