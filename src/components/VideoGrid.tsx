@@ -14,6 +14,7 @@ interface VimeoResponse {
   pictures: {
     sizes: Array<{
       link: string;
+      width: number;
     }>;
   };
 }
@@ -85,6 +86,7 @@ const VideoGrid = () => {
               }
             }, (error, body) => {
               if (error) {
+                console.error('Vimeo API Error:', error);
                 reject(error);
                 return;
               }
@@ -93,12 +95,16 @@ const VideoGrid = () => {
           });
 
           if (response.pictures && response.pictures.sizes) {
-            const thumbnailUrl = response.pictures.sizes[2].link; // Medium size thumbnail
+            // Find the largest thumbnail
+            const largestThumbnail = response.pictures.sizes.reduce((prev, current) => 
+              (prev.width > current.width) ? prev : current
+            );
+            
             const videoIndex = updatedVideos.findIndex(v => v.id === video.id);
             if (videoIndex !== -1) {
               updatedVideos[videoIndex] = {
                 ...updatedVideos[videoIndex],
-                thumbnail: thumbnailUrl
+                thumbnail: largestThumbnail.link
               };
             }
           }
@@ -150,7 +156,7 @@ const VideoGrid = () => {
                 </div>
                 <button 
                   onClick={() => setPlayingVideo(video.id)}
-                  className="play-button"
+                  className="play-button px-4 py-2"
                 >
                   PLAY VIDEO
                 </button>
