@@ -1,24 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Vimeo } from '@vimeo/vimeo';
-import axios from 'axios';
-
-interface Video {
-  url: string;
-  type: 'vimeo' | 'youtube';
-  id: string;
-  title: string;
-  subtitle: string;
-  thumbnail: string;
-}
-
-interface VimeoResponse {
-  pictures: {
-    sizes: Array<{
-      link: string;
-      width: number;
-    }>;
-  };
-}
+import VideoPlayer from './VideoPlayer';
+import VideoThumbnail from './VideoThumbnail';
+import { fetchVimeoThumbnails, getEmbedUrl } from '../services/VideoService';
+import { Video } from '../types/video';
 
 const VideoGrid = () => {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
@@ -29,7 +13,7 @@ const VideoGrid = () => {
       id: "1042513117",
       title: "VIMEO VIDEO",
       subtitle: "A beautiful vimeo creation",
-      thumbnail: "" // Will be set dynamically
+      thumbnail: ""
     },
     { 
       url: "https://www.youtube.com/watch?v=40oYTmYPbTY",
@@ -66,55 +50,17 @@ const VideoGrid = () => {
   ]);
 
   useEffect(() => {
-    // Auto-play the first video
     setPlayingVideo(videos[0].id);
   }, []);
 
   useEffect(() => {
-    const fetchVimeoThumbnails = async () => {
-      const vimeoVideos = videos.filter(video => video.type === 'vimeo');
-      const updatedVideos = [...videos];
-      
-      for (const video of vimeoVideos) {
-        try {
-          const response = await axios.get(`https://api.vimeo.com/videos/${video.id}`, {
-            headers: {
-              'Authorization': `bearer c2bddadd9678cf92f7c064929ea22042`
-            }
-          });
-
-          if (response.data.pictures && response.data.pictures.sizes) {
-            // Find the largest thumbnail
-            const largestThumbnail = response.data.pictures.sizes.reduce((prev: any, current: any) => 
-              (prev.width > current.width) ? prev : current
-            );
-            
-            const videoIndex = updatedVideos.findIndex(v => v.id === video.id);
-            if (videoIndex !== -1) {
-              updatedVideos[videoIndex] = {
-                ...updatedVideos[videoIndex],
-                thumbnail: largestThumbnail.link
-              };
-            }
-          }
-        } catch (error) {
-          console.error(`Error fetching thumbnail for video ${video.id}:`, error);
-        }
-      }
-
+    const updateThumbnails = async () => {
+      const updatedVideos = await fetchVimeoThumbnails(videos);
       setVideos(updatedVideos);
     };
 
-    fetchVimeoThumbnails();
+    updateThumbnails();
   }, []);
-
-  const getEmbedUrl = (video: Video, isFirst: boolean = false) => {
-    if (video.type === 'vimeo') {
-      return `https://player.vimeo.com/video/${video.id}${isFirst ? '?autoplay=1&muted=1' : ''}`;
-    } else {
-      return `https://www.youtube.com/embed/${video.id}${isFirst ? '?autoplay=1&mute=1' : ''}`;
-    }
-  };
 
   return (
     <div className="video-grid">
@@ -124,33 +70,17 @@ const VideoGrid = () => {
           className={`video-container ${index === 0 ? 'hero' : 'grid-item'}`}
         >
           {playingVideo === video.id ? (
-            <iframe
-              src={getEmbedUrl(video, index === 0)}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute top-0 left-0 w-full h-full"
+            <VideoPlayer 
+              embedUrl={getEmbedUrl(video, index === 0)}
               title={`Video ${index + 1}`}
             />
           ) : (
-            <div className="video-thumbnail-container">
-              <img 
-                src={video.thumbnail || '/placeholder.svg'} 
-                alt={video.title}
-                className="absolute top-0 left-0 w-full h-full object-cover"
-              />
-              <div className="video-overlay">
-                <div className="video-text">
-                  <p className="video-subtitle">{video.subtitle}</p>
-                  <h2 className="video-title">{video.title}</h2>
-                </div>
-                <button 
-                  onClick={() => setPlayingVideo(video.id)}
-                  className="play-button px-2 py-1"
-                >
-                  PLAY VIDEO
-                </button>
-              </div>
-            </div>
+            <VideoThumbnail
+              thumbnail={video.thumbnail}
+              title={video.title}
+              subtitle={video.subtitle}
+              onPlay={() => setPlayingVideo(video.id)}
+            />
           )}
         </div>
       ))}
