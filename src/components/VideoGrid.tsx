@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Vimeo } from '@vimeo/vimeo';
+import axios from 'axios';
 
 interface Video {
   url: string;
@@ -71,37 +72,20 @@ const VideoGrid = () => {
 
   useEffect(() => {
     const fetchVimeoThumbnails = async () => {
-      const client = new Vimeo(
-        '9f63ea25ec3b291f01ea61d38d18f8ff71c02075',
-        'okStOTaTXTMwBq4q5yquBZ7nuRY1VewzkArXR0S0O/gPdLNQaGtbyGKDUYQd9W5PBSh+iWKKFuIRmzPIFFKafaZLWFpJMZ6EGk+N8ldhJc+ta2BNtQ8KFOM9qYRQGl6W',
-        'c2bddadd9678cf92f7c064929ea22042'
-      );
-
       const vimeoVideos = videos.filter(video => video.type === 'vimeo');
       const updatedVideos = [...videos];
       
       for (const video of vimeoVideos) {
         try {
-          const response = await new Promise<VimeoResponse>((resolve, reject) => {
-            client.request({
-              method: 'GET',
-              path: `/videos/${video.id}`,
-              query: {
-                fields: 'pictures'
-              }
-            }, (error, body) => {
-              if (error) {
-                console.error('Vimeo API Error:', error);
-                reject(error);
-                return;
-              }
-              resolve(body as VimeoResponse);
-            });
+          const response = await axios.get(`https://api.vimeo.com/videos/${video.id}`, {
+            headers: {
+              'Authorization': `bearer c2bddadd9678cf92f7c064929ea22042`
+            }
           });
 
-          if (response.pictures && response.pictures.sizes) {
+          if (response.data.pictures && response.data.pictures.sizes) {
             // Find the largest thumbnail
-            const largestThumbnail = response.pictures.sizes.reduce((prev, current) => 
+            const largestThumbnail = response.data.pictures.sizes.reduce((prev: any, current: any) => 
               (prev.width > current.width) ? prev : current
             );
             
@@ -161,7 +145,7 @@ const VideoGrid = () => {
                 </div>
                 <button 
                   onClick={() => setPlayingVideo(video.id)}
-                  className="play-button px-4 py-2"
+                  className="play-button px-2 py-1"
                 >
                   PLAY VIDEO
                 </button>
