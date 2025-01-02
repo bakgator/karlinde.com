@@ -1,4 +1,4 @@
-import { Mail, User, Users, Link } from "lucide-react";
+import { Mail, User, Link, Instagram } from "lucide-react";
 
 const About = () => {
   return (
@@ -15,28 +15,6 @@ const About = () => {
           </p>
         </section>
 
-        {/* Client References Section */}
-        <section className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Users className="w-6 h-6 text-black" />
-            <h2 className="text-2xl font-bold">Client References</h2>
-          </div>
-          <ul className="space-y-4">
-            <li className="flex items-center gap-2">
-              <Link className="w-4 h-4 text-black" />
-              <span>Major Brand Studio</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Link className="w-4 h-4 text-black" />
-              <span>Creative Agency Network</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Link className="w-4 h-4 text-black" />
-              <span>Global Media Company</span>
-            </li>
-          </ul>
-        </section>
-
         {/* Contact Information */}
         <section className="space-y-4">
           <div className="flex items-center gap-2">
@@ -44,8 +22,19 @@ const About = () => {
             <h2 className="text-2xl font-bold">Contact</h2>
           </div>
           <div className="space-y-2">
-            <p className="text-black">Email: contact@example.com</p>
-            <p className="text-black">Location: New York, NY</p>
+            <p className="text-black">Email: karl@inde.se</p>
+            <p className="text-black">Location: Stockholm, Sweden</p>
+            <div className="flex items-center gap-2 mt-4">
+              <Instagram className="w-4 h-4 text-black" />
+              <a 
+                href="https://instagram.com/bakgator" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-black hover:underline"
+              >
+                @bakgator
+              </a>
+            </div>
           </div>
         </section>
       </div>

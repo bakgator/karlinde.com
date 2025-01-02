@@ -84,7 +84,7 @@
 }
 
 .play-button {
-  background-color: #ef4444;
+  background-color: #ff0000;
   color: white;
   border: none;
   border-radius: 0.25rem;
@@ -95,7 +95,7 @@
 }
 
 .play-button:hover {
-  background-color: #dc2626;
+  background-color: #cc0000;
 }
 
 iframe {
