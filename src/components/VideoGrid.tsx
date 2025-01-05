@@ -8,6 +8,22 @@ const VideoGrid = () => {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [videos, setVideos] = useState<Video[]>([
     { 
+      url: "https://vimeo.com/1043537890",
+      type: "vimeo",
+      id: "1043537890",
+      title: "NEW VIMEO VIDEO 1",
+      subtitle: "Latest creation",
+      thumbnail: ""
+    },
+    { 
+      url: "https://vimeo.com/1043541496",
+      type: "vimeo",
+      id: "1043541496",
+      title: "NEW VIMEO VIDEO 2",
+      subtitle: "Another masterpiece",
+      thumbnail: ""
+    },
+    { 
       url: "https://player.vimeo.com/video/1042513117?h=1606554dc9",
       type: "vimeo",
       id: "1042513117",
@@ -29,7 +45,7 @@ const VideoGrid = () => {
       id: "385563380",
       title: "NATURE BEAUTY",
       subtitle: "Exploring the wonders of nature",
-      thumbnail: "" // Will be set dynamically
+      thumbnail: ""
     },
     {
       url: "https://www.youtube.com/watch?v=oc7EaU6v46k",
