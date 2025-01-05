@@ -65,9 +65,12 @@ const VideoGrid = () => {
     }
   ]);
 
+  // Set initial playing video immediately
   useEffect(() => {
-    setPlayingVideo(videos[0].id);
-  }, []);
+    if (videos.length > 0 && !playingVideo) {
+      setPlayingVideo(videos[0].id);
+    }
+  }, [videos]);
 
   useEffect(() => {
     const updateThumbnails = async () => {
