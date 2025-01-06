@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import VideoGrid from '@/components/VideoGrid.vue';
+import VideoGrid from '../components/VideoGrid.vue'
 </script>
