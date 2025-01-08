@@ -42,18 +42,19 @@ const About = ({ onShowPasswordModal }: AboutProps) => {
             </div>
           </div>
         </section>
+      </div>
 
-        {/* Admin Button */}
-        {onShowPasswordModal && (
+      {/* Admin Button - Moved to bottom */}
+      {onShowPasswordModal && (
+        <div className="mt-auto pt-12 flex justify-center">
           <Button
             onClick={onShowPasswordModal}
-            variant="outline"
-            className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white border-none transition-colors duration-300"
+            className="bg-[#9b87f5] text-white border-none"
           >
             Admin Access
           </Button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
