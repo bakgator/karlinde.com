@@ -16,7 +16,9 @@ const About = ({ onShowPasswordModal }: AboutProps) => {
             <h2 className="text-2xl font-bold">About Me</h2>
           </div>
           <p className="text-black">
-            I am a creative professional specializing in video production and visual storytelling. My work focuses on creating compelling narratives through dynamic visual content.
+            I am a creative professional specializing in video production and visual
+            storytelling. My work focuses on creating compelling narratives through
+            dynamic visual content.
           </p>
         </section>
 
@@ -31,10 +33,10 @@ const About = ({ onShowPasswordModal }: AboutProps) => {
             <p className="text-black">Location: Stockholm, Sweden</p>
             <div className="flex items-center gap-2 mt-4">
               <Instagram className="w-4 h-4 text-black" />
-              <a 
-                href="https://instagram.com/bakgator" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href="https://instagram.com/bakgator"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-black hover:underline"
               >
                 @bakgator
@@ -44,17 +46,15 @@ const About = ({ onShowPasswordModal }: AboutProps) => {
         </section>
       </div>
 
-      {/* Admin Button - Moved to bottom */}
-      {onShowPasswordModal && (
-        <div className="mt-auto pt-12 flex justify-center">
-          <Button
-            onClick={onShowPasswordModal}
-            className="bg-[#9b87f5] text-white border-none"
-          >
-            Admin Access
-          </Button>
-        </div>
-      )}
+      {/* Admin Button - Always visible at bottom */}
+      <div className="mt-auto pt-12 flex justify-center">
+        <Button
+          onClick={onShowPasswordModal}
+          className="bg-[#9b87f5] text-white border-none"
+        >
+          Admin Access
+        </Button>
+      </div>
     </div>
   );
 };
