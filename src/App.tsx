@@ -25,7 +25,10 @@ const App = () => {
           <Navigation onShowPasswordModal={() => setShowPasswordModal(true)} />
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
+            <Route 
+              path="/about" 
+              element={<About onShowPasswordModal={() => setShowPasswordModal(true)} />} 
+            />
             <Route 
               path="/admin" 
               element={isAdmin() ? <AdminPanel /> : <Index />} 

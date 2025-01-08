@@ -1,6 +1,11 @@
-import { Mail, User, Link, Instagram } from "lucide-react";
+import { Mail, User, Instagram } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const About = () => {
+interface AboutProps {
+  onShowPasswordModal?: () => void;
+}
+
+const About = ({ onShowPasswordModal }: AboutProps) => {
   return (
     <div className="min-h-screen bg-[#a47864] text-black overflow-hidden flex flex-col p-8 md:p-16">
       <div className="max-w-3xl mx-auto space-y-12">
@@ -37,6 +42,17 @@ const About = () => {
             </div>
           </div>
         </section>
+
+        {/* Admin Button */}
+        {onShowPasswordModal && (
+          <Button
+            onClick={onShowPasswordModal}
+            variant="outline"
+            className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white border-none transition-colors duration-300"
+          >
+            Admin Access
+          </Button>
+        )}
       </div>
     </div>
   );
