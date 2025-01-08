@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Navigation from "./components/Navigation";
@@ -15,26 +15,6 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [lastKeyPress, setLastKeyPress] = useState({ key: '', time: 0 });
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        const now = Date.now();
-        if (
-          e.metaKey && 
-          lastKeyPress.key === 'Enter' && 
-          now - lastKeyPress.time < 500
-        ) {
-          setShowPasswordModal(true);
-        }
-        setLastKeyPress({ key: 'Enter', time: now });
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lastKeyPress]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -42,7 +22,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Navigation />
+          <Navigation onShowPasswordModal={() => setShowPasswordModal(true)} />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
