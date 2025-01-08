@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { VideoGrid } from './VideoGrid';
+import VideoGrid from './VideoGrid';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const AdminPanel = () => {
