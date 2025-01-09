@@ -15,6 +15,11 @@ interface VideoGridProps {
 const VideoGrid = ({ isAdmin = false }: VideoGridProps) => {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const { toast } = useToast();
+  const [newVideo, setNewVideo] = useState({
+    url: '',
+    title: '',
+    subtitle: ''
+  });
   const [videos, setVideos] = useState<Video[]>([
     { 
       url: "https://www.youtube.com/watch?v=qHuVnpOK91k",
@@ -112,53 +117,127 @@ const VideoGrid = ({ isAdmin = false }: VideoGridProps) => {
     setVideos(updatedVideos);
   };
 
+  const handleAddVideo = () => {
+    if (!newVideo.url || !newVideo.title) {
+      toast({
+        title: "Error",
+        description: "Please fill in at least the URL and title",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Extract video ID and type from URL
+    let videoId = '';
+    let videoType: 'youtube' | 'vimeo' = 'youtube';
+    let thumbnail = '';
+
+    if (newVideo.url.includes('youtube.com') || newVideo.url.includes('youtu.be')) {
+      videoType = 'youtube';
+      const urlParams = new URL(newVideo.url);
+      videoId = urlParams.searchParams.get('v') || urlParams.pathname.slice(1);
+      thumbnail = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    } else if (newVideo.url.includes('vimeo.com')) {
+      videoType = 'vimeo';
+      videoId = newVideo.url.split('/').pop() || '';
+      // Vimeo thumbnail will be fetched by the existing useEffect
+    } else {
+      toast({
+        title: "Error",
+        description: "Please enter a valid YouTube or Vimeo URL",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const newVideoObject: Video = {
+      url: newVideo.url,
+      type: videoType,
+      id: videoId,
+      title: newVideo.title,
+      subtitle: newVideo.subtitle,
+      thumbnail: thumbnail
+    };
+
+    setVideos([...videos, newVideoObject]);
+    setNewVideo({ url: '', title: '', subtitle: '' });
+    toast({
+      title: "Success",
+      description: "Video added successfully"
+    });
+  };
+
   if (isAdmin) {
     return (
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="videos">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-              {videos.map((video, index) => (
-                <Draggable key={video.id} draggableId={video.id} index={index}>
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="bg-secondary p-4 rounded-lg"
-                    >
-                      <div className="flex gap-4 items-start">
-                        <img 
-                          src={video.thumbnail || '/placeholder.svg'} 
-                          alt={video.title}
-                          className="w-32 h-20 object-cover rounded"
-                        />
-                        <div className="flex-1 space-y-2">
-                          <Input
-                            value={video.title}
-                            onChange={(e) => updateVideoDetails(index, 'title', e.target.value)}
-                            placeholder="Video title"
+        <div className="space-y-8">
+          <div className="bg-secondary p-4 rounded-lg space-y-4">
+            <h3 className="text-lg font-semibold">Add New Video</h3>
+            <div className="space-y-4">
+              <Input
+                placeholder="Video URL (YouTube or Vimeo)"
+                value={newVideo.url}
+                onChange={(e) => setNewVideo({ ...newVideo, url: e.target.value })}
+              />
+              <Input
+                placeholder="Video Title"
+                value={newVideo.title}
+                onChange={(e) => setNewVideo({ ...newVideo, title: e.target.value })}
+              />
+              <Input
+                placeholder="Video Subtitle"
+                value={newVideo.subtitle}
+                onChange={(e) => setNewVideo({ ...newVideo, subtitle: e.target.value })}
+              />
+              <Button onClick={handleAddVideo}>Add Video</Button>
+            </div>
+          </div>
+
+          <Droppable droppableId="videos">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+                {videos.map((video, index) => (
+                  <Draggable key={video.id} draggableId={video.id} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="bg-secondary p-4 rounded-lg"
+                      >
+                        <div className="flex gap-4 items-start">
+                          <img 
+                            src={video.thumbnail || '/placeholder.svg'} 
+                            alt={video.title}
+                            className="w-32 h-20 object-cover rounded"
                           />
-                          <Input
-                            value={video.subtitle}
-                            onChange={(e) => updateVideoDetails(index, 'subtitle', e.target.value)}
-                            placeholder="Video subtitle"
-                          />
-                          <Input
-                            value={video.thumbnail}
-                            onChange={(e) => updateVideoDetails(index, 'thumbnail', e.target.value)}
-                            placeholder="Thumbnail URL"
-                          />
+                          <div className="flex-1 space-y-2">
+                            <Input
+                              value={video.title}
+                              onChange={(e) => updateVideoDetails(index, 'title', e.target.value)}
+                              placeholder="Video title"
+                            />
+                            <Input
+                              value={video.subtitle}
+                              onChange={(e) => updateVideoDetails(index, 'subtitle', e.target.value)}
+                              placeholder="Video subtitle"
+                            />
+                            <Input
+                              value={video.thumbnail}
+                              onChange={(e) => updateVideoDetails(index, 'thumbnail', e.target.value)}
+                              placeholder="Thumbnail URL"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
       </DragDropContext>
     );
   }
