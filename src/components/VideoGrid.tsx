@@ -3,9 +3,18 @@ import VideoPlayer from './VideoPlayer';
 import VideoThumbnail from './VideoThumbnail';
 import { fetchVimeoThumbnails, getEmbedUrl } from '../services/VideoService';
 import { Video } from '../types/video';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { useToast } from "./ui/use-toast";
 
-const VideoGrid = () => {
+interface VideoGridProps {
+  isAdmin?: boolean;
+}
+
+const VideoGrid = ({ isAdmin = false }: VideoGridProps) => {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+  const { toast } = useToast();
   const [videos, setVideos] = useState<Video[]>([
     { 
       url: "https://www.youtube.com/watch?v=qHuVnpOK91k",
@@ -65,7 +74,6 @@ const VideoGrid = () => {
     }
   ]);
 
-  // Set initial playing video immediately
   useEffect(() => {
     if (videos.length > 0 && !playingVideo) {
       setPlayingVideo(videos[0].id);
@@ -80,6 +88,80 @@ const VideoGrid = () => {
 
     updateThumbnails();
   }, []);
+
+  const handleDragEnd = (result: any) => {
+    if (!result.destination) return;
+
+    const items = Array.from(videos);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setVideos(items);
+    toast({
+      title: "Video order updated",
+      description: "The new order has been saved."
+    });
+  };
+
+  const updateVideoDetails = (index: number, field: keyof Video, value: string) => {
+    const updatedVideos = [...videos];
+    updatedVideos[index] = {
+      ...updatedVideos[index],
+      [field]: value
+    };
+    setVideos(updatedVideos);
+  };
+
+  if (isAdmin) {
+    return (
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="videos">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+              {videos.map((video, index) => (
+                <Draggable key={video.id} draggableId={video.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className="bg-secondary p-4 rounded-lg"
+                    >
+                      <div className="flex gap-4 items-start">
+                        <img 
+                          src={video.thumbnail || '/placeholder.svg'} 
+                          alt={video.title}
+                          className="w-32 h-20 object-cover rounded"
+                        />
+                        <div className="flex-1 space-y-2">
+                          <Input
+                            value={video.title}
+                            onChange={(e) => updateVideoDetails(index, 'title', e.target.value)}
+                            placeholder="Video title"
+                          />
+                          <Input
+                            value={video.subtitle}
+                            onChange={(e) => updateVideoDetails(index, 'subtitle', e.target.value)}
+                            placeholder="Video subtitle"
+                          />
+                          <Input
+                            value={video.thumbnail}
+                            onChange={(e) => updateVideoDetails(index, 'thumbnail', e.target.value)}
+                            placeholder="Thumbnail URL"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    );
+  }
 
   return (
     <div className="video-grid">
