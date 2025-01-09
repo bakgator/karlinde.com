@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import VideoGrid from './VideoGrid';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
@@ -18,7 +17,6 @@ const AdminPanel = () => {
   });
 
   const handleContentSave = () => {
-    // In a real app, this would save to a backend
     toast({
       title: "Content updated",
       description: "Your changes have been saved successfully."
@@ -26,11 +24,11 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
+    <div className="min-h-screen bg-background text-foreground p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-foreground">Admin Panel</h1>
+        <h1 className="text-3xl font-bold mb-8">Admin Panel</h1>
         
-        <div className="space-x-4 mb-8">
+        <div className="flex space-x-4 mb-8">
           <button 
             onClick={() => setActiveTab('videos')}
             className={`px-4 py-2 rounded-lg ${activeTab === 'videos' 
@@ -51,14 +49,14 @@ const AdminPanel = () => {
 
         {activeTab === 'videos' && (
           <div className="bg-card rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 text-card-foreground">Manage Videos</h2>
+            <h2 className="text-xl font-semibold mb-4">Manage Videos</h2>
             <VideoGrid isAdmin={true} />
           </div>
         )}
 
         {activeTab === 'content' && (
           <div className="bg-card rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 text-card-foreground">Manage Content</h2>
+            <h2 className="text-xl font-semibold mb-4">Manage Content</h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">About Title</label>
