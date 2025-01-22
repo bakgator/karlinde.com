@@ -3,6 +3,6 @@ export interface Video {
   type: 'vimeo' | 'youtube';
   id: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   thumbnail: string;
 }
