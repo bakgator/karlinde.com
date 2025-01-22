@@ -19,14 +19,14 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-[#1A1F2C]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex space-x-8">
-            <Link to="/" className="flex items-center px-3 py-2 text-sm font-medium">
+            <Link to="/" className="flex items-center px-3 py-2 text-sm font-medium text-[#D6BCFA] hover:text-[#9b87f5]">
               Home
             </Link>
-            <Link to="/about" className="flex items-center px-3 py-2 text-sm font-medium">
+            <Link to="/about" className="flex items-center px-3 py-2 text-sm font-medium text-[#D6BCFA] hover:text-[#9b87f5]">
               About
             </Link>
           </div>
@@ -34,14 +34,14 @@ const Navigation = () => {
             {user ? (
               <button
                 onClick={handleSignOut}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                className="px-3 py-2 text-sm font-medium text-[#D6BCFA] hover:text-[#9b87f5]"
               >
                 Sign Out
               </button>
             ) : (
               <Link
                 to="/auth"
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                className="px-3 py-2 text-sm font-medium text-[#D6BCFA] hover:text-[#9b87f5]"
               >
                 Sign In
               </Link>
