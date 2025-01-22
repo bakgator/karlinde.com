@@ -4,5 +4,5 @@ export interface Video {
   id: string;
   title: string;
   subtitle?: string;
-  thumbnail: string;
+  thumbnail?: string;
 }
