@@ -1,40 +1,55 @@
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { useAuth } from './AuthProvider';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
 
 const Navigation = () => {
-  const location = useLocation();
-  const isAboutPage = location.pathname === "/about";
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
-    <div className="fixed top-4 w-full px-4 z-50">
-      <div className="flex items-center justify-between max-w-7xl mx-auto">
-        {/* Logo container */}
-        <div className="w-12 h-12 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center">
-          <img
-            src="/placeholder.svg"
-            alt="Logo"
-            className="w-8 h-8"
-          />
+    <nav className="bg-white shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex space-x-8">
+            <Link to="/" className="flex items-center px-3 py-2 text-sm font-medium">
+              Home
+            </Link>
+            <Link to="/about" className="flex items-center px-3 py-2 text-sm font-medium">
+              About
+            </Link>
+          </div>
+          <div className="flex items-center">
+            {user ? (
+              <button
+                onClick={handleSignOut}
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <Link
+                to="/auth"
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
-        
-        {/* Navigation links */}
-        {isAboutPage ? (
-          <Link 
-            to="/" 
-            className="text-black hover:text-gray-700 transition-colors text-lg"
-          >
-            Portfolio
-          </Link>
-        ) : (
-          <Link 
-            to="/about" 
-            className="text-white hover:text-gray-300 transition-colors text-lg"
-          >
-            About & Contact
-          </Link>
-        )}
       </div>
-    </div>
+    </nav>
   );
 };
 
