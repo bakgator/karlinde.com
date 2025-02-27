@@ -1,3 +1,4 @@
+
 import { Mail, Phone, Instagram, Globe } from "lucide-react";
 
 const About = () => {
@@ -17,7 +18,7 @@ const About = () => {
             <section>
               <h2 className="text-xl font-bold mb-4">OM MIG</h2>
               <p className="text-base">
-               Karl Inde is a photographer and video director with experience in creating visuals for feature films, concert, music videos, and fashion. His work focuses on storytelling through light, sound, and creative direction.
+                Karl Inde is a photographer and video director with experience in creating visuals for feature films, concert, music videos, and fashion. His work focuses on storytelling through light, sound, and creative direction.
               </p>
             </section>
 
@@ -38,15 +39,20 @@ const About = () => {
                   <a href="https://instagram.com/bakgator" target="_blank" rel="noopener noreferrer" className="hover:underline">
                     @bakgator
                   </a>
-                </div
+                </div>
               </div>
             </section>
+
+            {/* Education Section */}
+            <section>
+              <h2 className="text-xl font-bold mb-4">UTBILDNING</h2>
+              <div className="space-y-2">
+                <div>
                   <p className="font-bold">Berghs SOC, 2020</p>
                   <p>Art Direction</p>
                 </div>
               </div>
             </section>
-
 
             {/* Selected Projects Section */}
             <section>
@@ -64,9 +70,8 @@ const About = () => {
           </div>
 
           {/* Right Column */}
-        
-              </div>
-            </section>
+          <div>
+            {/* This column is empty in the current code */}
           </div>
         </div>
       </div>
